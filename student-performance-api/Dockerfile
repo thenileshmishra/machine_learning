@@ -1,1 +1,8 @@
- FROM baseImage
+ FROM python:3.10-slim
+ WORKDIR /app
+ RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+ COPY requirements.txt .
+ RUN pip install --no-cache-dir -r requirements.txt
+ COPY . .
+ # uvicorn for local testing; Lambda will use the image differently but it's compatible
+ CMD ["uvicorn", "app.inference:app", "--host", "0.0.0.0", "--port", "8080"]
