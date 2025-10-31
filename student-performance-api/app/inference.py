@@ -12,7 +12,6 @@ app = FastAPI()
 REG_MODEL_PATH = os.path.join("models", "best_regression_model.pkl")
 SCALER_PATH = os.path.join("models", "scaler.pkl")
 NN_WEIGHTS = os.path.join("models", "neural_regressor.pth")
-
 reg_model = joblib.load(REG_MODEL_PATH)
 scaler = joblib.load(SCALER_PATH)
 
@@ -20,20 +19,22 @@ scaler = joblib.load(SCALER_PATH)
 ##Define NN same arch as training
 
 import torch.nn as nn
-class NeuralNet(nn.Modules):
+class NeuralNet(nn.Module):
     def __init__(self, input_dim):
         super().__init__()
-        self.net = nn.Sequential(
+        self.network = nn.Sequential(
             nn.Linear(input_dim, 64),
             nn.ReLU(),
             nn.Dropout(0.3),
-            nn.Linear(64,32),
+            nn.Linear(64, 32),
             nn.ReLU(),
             nn.Dropout(0.2),
-            nn.Linear(32,1)
+            nn.Linear(32, 1)
         )
-    def forward(self,x):
-        return self.net(x)
+
+    def forward(self, x):
+        return self.network(x)
+
     
 INPUT_DIM = 8
 nn_model = NeuralNet(INPUT_DIM)
